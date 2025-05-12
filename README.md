@@ -1,4 +1,4 @@
-# CHMTAC (Civilian Harm DMP Tactical) Charlie
+# CHMTAC (Civilian Harm DMP Tactical) Delta
 
 CHMTAC is a containerized, multi-service application designed to intake reports of civilian harm, manage them, analyze data, and provide tools for mitigating civilian harm. This project consists of several microservices, including frontend applications, backend services, and supporting infrastructure.
 
