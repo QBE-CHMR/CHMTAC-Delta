@@ -1,0 +1,3 @@
+include:
+  - ./dmz/docker-compose.yml
+  - ./dmp/docker-compose.yml

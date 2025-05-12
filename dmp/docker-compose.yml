@@ -1,0 +1,54 @@
+networks:
+  chmrdmpnet:
+    driver: bridge
+
+volumes:
+  filedata:
+  postgres-data:
+
+services:
+  chmr-dmp-postgres:
+    build:
+      context: ./chmr-dmp-postgres
+    restart: always
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+    networks:
+      - chmrdmpnet
+
+  chmr-dmp-dal:
+    build:
+      context: ./chmr-dmp-dal
+    env_file:
+      - ./.env
+    networks:
+      - chmrdmpnet
+    depends_on:
+      - chmr-dmp-postgres
+    volumes:
+      - filedata:/usr/server/app/files
+
+  chmr-dmp-ingest:
+    build:
+      context: ./chmr-dmp-ingest
+    env_file:
+      - ./.env
+    networks:
+      - chmrdmpnet
+    ports:
+      - ${PORT_DMP_INGEST}:${PORT_DMP_INGEST}
+    depends_on:
+      - chmr-dmp-dal
+
+  chmr-dmp-api:
+    build:
+      context: ./chmr-dmp-api
+    env_file:
+      - ./.env
+    networks:
+      - chmrdmpnet
+    ports:
+      - ${PORT_DMP_API}:${PORT_DMP_API}
+    depends_on:
+      - chmr-dmp-dal
+
