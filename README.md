@@ -17,7 +17,7 @@ CHMTAC is a containerized, multi-service application designed to intake reports 
 ---
 
 ## **Overview**
-CHMTAC is the tactical version of the CHMR DMP. It is built to scale the reporting, management, and analysis of civilian harm incidents. This repo is for preproduction release Charlie only, which is not the full DMP.
+CHMTAC is the tactical version of the CHMR DMP. It is built to scale the reporting, management, and analysis of civilian harm incidents. This repo is for preproduction release Delta only, which is not the full DMP.
 
 It includes:
 - A frontend for submitting and managing reports.
@@ -67,8 +67,8 @@ The architecture is partitioned into individual containers:
 ### **Steps**
 1. Clone the repository:
    ```bash
-   git clone https://github.com/QBE-CHMR/CHMTAC-Charlie.git
-   cd CHMTAC-Charlie
+   git clone https://github.com/QBE-CHMR/CHMTAC-Delta.git
+   cd CHMTAC-Delta
 
 2. Start all services using Docker Compose:
    ```bash
