@@ -1,6 +1,6 @@
 import express from 'express';
 import { redisClient } from '../redisClient.js';
-import { STATUS_ENUM } from '../constants/statusEnum.js';
+import { STATUS_ENUM } from '../../common/constants/statusEnum.js';
 import path from "path";
 import fs from "fs/promises"
 

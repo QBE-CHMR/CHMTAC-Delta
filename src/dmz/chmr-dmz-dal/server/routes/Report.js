@@ -3,8 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { redisClient } from '../redisClient.js';
 import CivValidateRequiredFields from '../middleware/CivValidateRequiredFields.js';
 import DodValidateRequiredFields from '../middleware/DodValidateRequiredFields.js';
-import { STATUS_ENUM } from '../constants/statusEnum.js';
-import validateReport from '../middleware/validateReport.js';
+import { STATUS_ENUM } from '../../common/constants/statusEnum.js';
 import useragentfilter from '../useragentfilter.js'
 import multer from 'multer';
 import path from 'path';

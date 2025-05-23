@@ -16,16 +16,11 @@ import {
   Typography
 } from "@mui/material";
 
-import api    from "../services/api.js";
-import Header from "../components/Header.js";
+import api         from "../services/api.js";
+import Header      from "../components/Header.js";
+import STATUS_ENUM from "../../common/constants/statusEnum.js"
 
-const STATUS_MAP = {
-  submitted:     "Submitted",
-  promotable:    "Promotable",
-  notPromotable: "NotPromotable",
-  discard:       "Discard"
-};
-const STATUS_VALUES = Object.keys(STATUS_MAP);   
+const STATUS_VALUES = Object.keys(STATUS_ENUM);   
 
 export default function ReportManagementPage() {
   const [startIndex,   setStartIndex]   = useState(0);
@@ -137,7 +132,7 @@ export default function ReportManagementPage() {
               >
                 <MenuItem value=""><em>All Statuses</em></MenuItem>
                 {STATUS_VALUES.map(s => (
-                  <MenuItem key={s} value={s}>{STATUS_MAP[s]}</MenuItem>
+                  <MenuItem key={s} value={s}>{STATUS_ENUM[s]}</MenuItem>
                 ))}
               </Select>
             </FormControl>
@@ -200,7 +195,7 @@ export default function ReportManagementPage() {
               reports.map(r => (
                 <TableRow key={r.id} hover>
                   <TableCell>{r.id}</TableCell>
-                  <TableCell>{STATUS_MAP[r.status] ?? r.status}</TableCell>
+                  <TableCell>{STATUS_ENUM[r.status] ?? r.status}</TableCell>
                   <TableCell>{r.submittedAt}</TableCell>
                   <TableCell>
                     <Button size="small" variant="outlined" sx={{ mr:1 }} onClick={() => viewReport(r.id)}>View</Button>
@@ -234,7 +229,7 @@ export default function ReportManagementPage() {
 
         
         <Typography><strong>ID:</strong>            {selectedReport.id}</Typography>
-        <Typography><strong>Status:</strong>        {STATUS_MAP[selectedReport.status] ?? selectedReport.status}</Typography>
+        <Typography><strong>Status:</strong>        {STATUS_ENUM[selectedReport.status] ?? selectedReport.status}</Typography>
         <Typography><strong>Submitted At:</strong>  {selectedReport.submittedAt}</Typography>
 
       
@@ -296,7 +291,7 @@ export default function ReportManagementPage() {
                 onChange={e => setNewStatus(e.target.value)}
               >
                 {STATUS_VALUES.map(s => (
-                  <MenuItem key={s} value={s}>{STATUS_MAP[s]}</MenuItem>
+                  <MenuItem key={s} value={s}>{STATUS_ENUM[s]}</MenuItem>
                 ))}
               </Select>
             </FormControl>

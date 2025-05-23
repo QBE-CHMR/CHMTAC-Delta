@@ -1,15 +1,24 @@
 # build React
 FROM node:18-alpine AS build
 WORKDIR /app
-COPY package*.json ./
+
+COPY ./dmz/chmr-dmz-maint/package*.json ./
+
 RUN npm install --no-audit --progress=false && npm cache clean --force
-COPY . .
+
+COPY ./dmz/chmr-dmz-maint/ ./app/src
+COPY ./dmz/chmr-dmz-maint/assets/ ./app/
+COPY ./dmz/chmr-dmz-maint/public/ ./app/
+COPY ./common/ ./common
+
+RUN find 
+
 RUN npm run build
 
 # serve with Nginx
 FROM nginx:alpine
 COPY --from=build /app/build /usr/share/nginx/html
-COPY nginx.conf      /etc/nginx/conf.d/default.conf
+COPY ./dmz/chmr-dmz-maint/nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
 
