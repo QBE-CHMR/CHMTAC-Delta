@@ -21,6 +21,7 @@ services:
     depends_on:
       - chmr-dmz-redis # Ensure Redis starts before DAL
     volumes:
+      - ./common:/common
       - filedata:/usr/server/app/files
 
   chmr-intake-web:
@@ -35,11 +36,13 @@ services:
       - chmrdmznet
     depends_on:
       - chmr-dmz-dal # Ensure DAL starts before intake-web
+    volumes:
+      - ./common:/common      
 
   chmr-dmz-maint:
     build:
-      context: ./src
-      dockerfile: ./dmz/chmr-dmz-maint/Dockerfile
+      context: ./src/dmz/chmr-dmz-maint
+      dockerfile: ./Dockerfile
     env_file:
       - ./.env
     ports:
@@ -51,8 +54,8 @@ services:
 
   chmr-report-dispos:
     build:
-      context: ./src
-      dockerfile: ./dmz/chmr-report-dispos/Dockerfile
+      context: ./src/dmz/chmr-report-dispos
+      dockerfile: ./Dockerfile
     env_file:
       - ./.env
     networks:
@@ -62,7 +65,8 @@ services:
 
   chmr-dmp-postgres:
     build:
-      context: ./dmp/chmr-dmp-postgres
+      context: ./src/dmp/chmr-dmp-postgres
+      dockerfile: ./Dockerfile
     restart: always
     volumes:
       - ./postgres-data:/var/lib/postgresql/data
@@ -71,7 +75,8 @@ services:
 
   chmr-dmp-dal:
     build:
-      context: ./dmp/chmr-dmp-dal
+      context: ./src/dmp/chmr-dmp-dal
+      dockerfile: ./Dockerfile
     env_file:
       - ./.env
     networks:
@@ -83,7 +88,8 @@ services:
 
   chmr-dmp-ingest:
     build:
-      context: ./dmp/chmr-dmp-ingest
+      context: ./src/dmp/chmr-dmp-ingest
+      dockerfile: ./Dockerfile
     env_file:
       - ./.env
     networks:
@@ -95,7 +101,8 @@ services:
 
   chmr-dmp-api:
     build:
-      context: ./dmp/chmr-dmp-api
+      context: ./src/dmp/chmr-dmp-api
+      dockerfile: ./Dockerfile
     env_file:
       - ./.env
     networks:

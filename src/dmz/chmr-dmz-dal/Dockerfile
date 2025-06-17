@@ -1,5 +1,10 @@
 FROM node:23-slim
 
+# RUN pwd
+# RUN mkdir shit
+# COPY . ./shit
+# RUN find ./shit
+
 RUN apt-get update -qq && \
 apt-get install -y --no-install-recommends \
     ca-certificates tini && \
@@ -15,9 +20,8 @@ RUN npm ci --omit=dev && \
 npm cache clean --force
 
 COPY ./common/ ./common
-COPY ./dmz/chmr-dmz-dal/ .
 
-RUN find 
+COPY ./dmz/chmr-dmz-dal/. .
 
 VOLUME ["/usr/server/app/files"]
 EXPOSE 5000
