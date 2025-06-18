@@ -69,8 +69,6 @@ const IntakeFormComponent = ({ onSubmit }) => {
 
     const formData = new FormData(formRef.current);
     console.log("Files count:", formData.getAll('document_files').length);
-  
-    console.log("Submitting form data (multipart):", [...formData.keys()],[...formData.values()]);
 
     const startDateValue = formData.get("start_datetime"); // Retrieve start date
     const endDateValue = formData.get("end_datetime"); // Retrieve end date

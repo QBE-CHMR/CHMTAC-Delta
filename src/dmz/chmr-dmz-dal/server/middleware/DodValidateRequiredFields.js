@@ -4,6 +4,7 @@
 
 export default (req, res, next) => {
     const requiredFields = [
+      'publicUUID',
       'full_name',
       'phone_number',
       'email_address',

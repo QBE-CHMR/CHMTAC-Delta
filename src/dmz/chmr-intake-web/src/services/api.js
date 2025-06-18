@@ -3,6 +3,7 @@ import axios from 'axios';
 // Use relative paths for API calls
 const API_BASE_URL = '/report';
 
+//Submits the report to the backend API
 export const submitReport = async (data) => {
   try {
     const contactType = process.env.CHIR_CONTACT_TYPE || 'DOD';
@@ -20,7 +21,11 @@ export const submitReport = async (data) => {
 
     return response.data;
   } catch (error) {
-    console.error('Error submitting the report:', error.response?.data || error.message);
+    // Log detailed error information to the console
+    console.error('Error submitting the report:');
+    console.error('Status:', error.response?.status || 'No status available');
+    console.error('Data:', error.response?.data || 'No response data available');
+    console.error('Message:', error.message);
     throw error;
   }
 };

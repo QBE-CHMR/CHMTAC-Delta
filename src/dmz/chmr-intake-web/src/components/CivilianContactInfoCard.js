@@ -17,8 +17,8 @@ const CivilianContactInfoCard = () => {
           </Grid>
           <Grid item xs={12} md={6}>
             <TextField
-              label="Phone (Commercial)"
-              name="phone_commercial"
+              label="Phone"
+              name="phone_number"
               fullWidth
               required
             />

@@ -3,6 +3,7 @@
   "name": "chmr-app",
   "version": "0.1.0",
   "private": true,
+
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
@@ -26,24 +27,28 @@
     "redis": "^4.7.0",
     "web-vitals": "^2.1.4"
   },
+
+  "devDependencies": {
+    "@playwright/test": "^1.44.0"
+  },
+
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+
+   
+    "e2e": "playwright test",           
+    "e2e:ui": "playwright test --ui"    
   },
+
   "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
+    "extends": ["react-app", "react-app/jest"]
   },
+
   "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
+    "production": [">0.2%", "not dead", "not op_mini all"],
     "development": [
       "last 1 chrome version",
       "last 1 firefox version",
