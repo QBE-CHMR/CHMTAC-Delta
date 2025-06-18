@@ -2,11 +2,12 @@
 FROM node:18-alpine
 
 WORKDIR /app
-COPY package*.json ./
+COPY ./dmp/chmr-dmp-ingest/package*.json ./
 RUN npm install && npm cache clean --force
 
-COPY . .
+COPY ./common/ ./common
 
+COPY ./dmp/chmr-dmp-ingest/. .
 
 EXPOSE 7642
 

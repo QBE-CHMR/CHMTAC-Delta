@@ -1,24 +1,24 @@
     FROM node:23-slim
 
     RUN apt-get update -qq && \
-        apt-get install -y --no-install-recommends \
-          ca-certificates tini && \
-        apt-get clean && rm -rf /var/lib/apt/lists/*
-    
+    apt-get install -y --no-install-recommends \
+        ca-certificates tini && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
     ENTRYPOINT ["/usr/bin/tini", "--"]
-    
 
     WORKDIR /usr/server/app
 
-    COPY package*.json ./
-    
+    COPY ./dmp/chmr-dmp-dal/package*.json ./
+
     RUN npm ci --omit=dev && \
-        npm cache clean --force
-    
-    COPY . .
-    
+    npm cache clean --force
+
+    COPY ./common/ ./common
+
+    COPY ./dmp/chmr-dmp-dal/. .
+
     VOLUME ["/usr/server/app/files"]
     EXPOSE 5000
-    
-    CMD ["node", "server.js"]
-    
+
+    CMD ["node", "server/server.js"]

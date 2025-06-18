@@ -9,12 +9,14 @@ ENTRYPOINT ["/usr/bin/tini", "--"]
 
 WORKDIR /usr/server/app
 
-COPY package*.json ./
+COPY ./dmp/chmr-dmp-api/package*.json ./
 
 RUN npm ci --omit=dev && \
     npm cache clean --force
 
-COPY . .
+COPY ./dmp/chmr-dmp-api/. .
+
+COPY ./common/ ./common
 
 EXPOSE 8369
 
