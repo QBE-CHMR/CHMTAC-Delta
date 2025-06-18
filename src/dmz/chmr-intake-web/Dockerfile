@@ -4,7 +4,6 @@ FROM node:18-alpine AS build
 WORKDIR /app
 COPY ./dmz/chmr-intake-web/package*.json ./
 RUN npm install && npm cache clean --force
-RUN pwd
 
 COPY ./common/ ./common
 COPY ./dmz/chmr-intake-web/. .

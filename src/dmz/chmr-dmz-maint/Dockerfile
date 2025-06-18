@@ -9,7 +9,7 @@ RUN npm run build
 # serve with Nginx
 FROM nginx:alpine
 COPY --from=build /app/build /usr/share/nginx/html
-COPY ./dmz/chmr-dmz-maint/nginx.conf      /etc/nginx/conf.d/default.conf
+COPY ./dmz/chmr-dmz-maint/default.conf      /etc/nginx/conf.d/default.conf
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
 
