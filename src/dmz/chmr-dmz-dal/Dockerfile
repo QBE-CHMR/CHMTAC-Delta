@@ -1,10 +1,5 @@
 FROM node:23-slim
 
-# RUN pwd
-# RUN mkdir shit
-# COPY . ./shit
-# RUN find ./shit
-
 RUN apt-get update -qq && \
 apt-get install -y --no-install-recommends \
     ca-certificates tini && \
