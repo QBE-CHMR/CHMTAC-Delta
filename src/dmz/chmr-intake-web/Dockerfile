@@ -1,9 +1,11 @@
 # Build Stage
-FROM node:18-alpine AS build
+FROM node:20-alpine AS build
 
 WORKDIR /app
 COPY ./dmz/chmr-intake-web/package*.json ./
-RUN npm install && npm cache clean --force
+RUN npm ci --omit=dev --loglevel=error \
+ && npm install react-scripts --loglevel=error \
+ && npm cache clean --force
 RUN pwd
 
 COPY ./common/ ./common

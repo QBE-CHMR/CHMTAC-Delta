@@ -1,8 +1,10 @@
 # build React
-FROM node:18-alpine AS build
+FROM node:20-alpine AS build
 WORKDIR /app
 COPY ./dmz/chmr-dmz-maint/package*.json ./
-RUN npm install --no-audit --progress=false && npm cache clean --force
+RUN npm ci --omit=dev --loglevel=error \
+ && npm install react-scripts --loglevel=error \
+ && npm cache clean --force
 COPY ./dmz/chmr-dmz-maint/. .
 RUN npm run build
 
