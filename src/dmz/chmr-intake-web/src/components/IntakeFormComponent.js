@@ -6,10 +6,11 @@ import {
   Card,
   CardContent,
   CardHeader,
+  Collapse,
   Grid,
   Alert,
   MenuItem,
-  Stack
+  Stack,
 } from "@mui/material";
 import CaptchaComponent from "./CaptchaComponent.js";
 import DodContactInfoCard from "./DodContactInfoCard.js";
@@ -18,13 +19,14 @@ import FileUploadComponent from "./FileUploadComponent.js";
 import moment from "moment-timezone";
 
 // Choose between DOD or CIVILIAN form
-const CHIR_CONTACT_TYPE = process.env.CHIR_CONTACT_TYPE || "DOD"; // Default to "DOD"
+const REACT_APP_CONTACT_TYPE = process.env.REACT_APP_CONTACT_TYPE || "DOD"; // Default to "DOD"
 
 const IntakeFormComponent = ({ onSubmit }) => {
   const formRef = useRef(null); // Create a ref for the form element
   const [captchaVerified, setCaptchaVerified] = useState(true); // Set to true for testing
   const [error, setError] = useState("");
   const [location, setLocation] = useState('');
+  const [showPOC2, setShowPOC2] = useState(false); 
 
   const [selectedTimeZone, setSelectedTimeZone] = useState('');
   const timeZoneOptions = moment.tz.names(); // Get a list of all time zones
@@ -47,21 +49,19 @@ const IntakeFormComponent = ({ onSubmit }) => {
 
   const getLocation = () => {
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        const { latitude, longitude } = position.coords;
-        setLocation(`Lat: ${latitude}, Long: ${longitude}`); // Update state
-      });
+      setLocation("Loading coordinates..."); // Set loading text
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          setLocation(`Lat: ${latitude}, Long: ${longitude}`); // Update with actual coordinates
+        },
+        () => {
+          setLocation("Unable to retrieve location."); // Handle errors
+        }
+      );
     } else {
       setError("Geolocation is not supported by this browser.");
     }
-  };
-
-  const handleReset = () => {
-    if (formRef.current) {
-      formRef.current.reset(); // Reset all form fields to their initial values
-    }
-    setError("");
-    setCaptchaVerified(false);
   };
 
   const handleSubmit = async (e) => {
@@ -114,7 +114,7 @@ const IntakeFormComponent = ({ onSubmit }) => {
     <form onSubmit={handleSubmit} ref={formRef} encType="multipart/form-data" sx={{ maxWidth: '1200px', width: '100%', margin: '0 auto' }}>
 
       {/* Displays Contacts Card based on .env file*/}
-      {CHIR_CONTACT_TYPE === "DOD" ? (
+      {REACT_APP_CONTACT_TYPE === "DOD" ? (
         <DodContactInfoCard />
       ) : (
         <CivilianContactInfoCard />
@@ -124,27 +124,34 @@ const IntakeFormComponent = ({ onSubmit }) => {
       <Card sx={{ mb: 5 }}>
         <CardHeader title="POC Contact Information" />
         <CardContent>
-            <Stack>
-              <Grid container spacing={2}>
-                <Grid item xs={12} md={6}>
-                  <TextField
-                    label="POC 1 Name"
-                    name="poc_1_name"
-                    fullWidth
-                  />
-                </Grid>
-                <Grid item xs={12} md={6}>
-                  <TextField
-                    label="POC 1 Info"
-                    name="poc_1_info"
-                    fullWidth
-                  />
-                </Grid>
+          <Stack>
+            <Grid container spacing={2}>
+              <Grid item xs={12} md={6}>
+                <TextField
+                  label="POC 1 Name"
+                  name="poc_1_name"
+                  fullWidth
+                />
               </Grid>
+              <Grid item xs={12} md={6}>
+                <TextField
+                  label="POC 1 Info"
+                  name="poc_1_info"
+                  fullWidth
+                />
+              </Grid>
+            </Grid>
 
-              <Box sx={{ borderBottom: "1px solid #ccc", my: 2, width: '100%' }} />
+            <Button
+              variant="text"
+              onClick={() => setShowPOC2(!showPOC2)} // Toggle visibility
+              sx={{ mt: 2 }}
+            >
+              {showPOC2 ? "Hide POC 2" : "Add POC 2"}
+            </Button>
 
-              <Grid container spacing={2}>
+            <Collapse in={showPOC2}>
+              <Grid container spacing={2} sx={{ mt: 2 }}>
                 <Grid item xs={12} md={6}>
                   <TextField
                     label="POC 2 Name"
@@ -160,7 +167,8 @@ const IntakeFormComponent = ({ onSubmit }) => {
                   />
                 </Grid>
               </Grid>
-            </Stack>
+            </Collapse>
+          </Stack>
         </CardContent>
       </Card>
 
@@ -180,7 +188,7 @@ const IntakeFormComponent = ({ onSubmit }) => {
                   shrink: true, // Ensure the label shrinks when the field has a value
                 }}
               />
-              <Button variant="contained" sx={{ mt: 2, backgroundColor: "#3f51b5" }} onClick={getLocation}>Get Location</Button>
+              <Button variant="contained" sx={{ mt: 2, backgroundColor: "#7280ce" }} onClick={getLocation}>Get Location</Button>
             </Grid>
             <Grid item xs={12} md={6}>
               <TextField type="datetime-local" label="Start Date and Time" name="start_datetime" fullWidth required InputLabelProps={{ shrink: true }} />
@@ -253,36 +261,25 @@ const IntakeFormComponent = ({ onSubmit }) => {
       {error && <Alert severity="error">{error}</Alert>}
 
       {/* Submit and reset buttons stacked */}
-      <Grid container spacing={2} justifyContent="space-between" alignItems="center">
-        <Grid item xs={12} md={6}>
+      <Box sx={{ mt: 3 }}>
+        <Stack direction="row" spacing={8} justifyContent="flex-start" alignItems="center">
+          {/* Submit Button */}
           <Button
             type="submit"
             variant="contained"
-            sx={{ mt: 2, backgroundColor: "#3f51b5" }}
-            fullWidth
+            sx={{
+              backgroundColor: "#3f51b5",
+              minWidth: 140,
+              mt: 2
+            }}
           >
             Submit Form
           </Button>
 
-          <Button
-            variant="outlined"
-            color="secondary"
-            fullWidth
-            sx={{ mt: 3, mb: 3 }}
-            type="reset"
-            onClick={handleReset}
-          >
-            Reset Form
-          </Button>
-        </Grid>
-
-        {/* Position Captcha in the same row */}
-        <Grid item xs={12} md={12}>
-          <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2, mb: 3 }}>
-            <CaptchaComponent onVerify={(verified) => setCaptchaVerified(verified)} />
-          </Box>
-        </Grid>
-      </Grid>
+          {/* Captcha Component */}
+          <CaptchaComponent onVerify={(verified) => setCaptchaVerified(verified)} />
+        </Stack>
+      </Box>
     </form>
   );
 };
