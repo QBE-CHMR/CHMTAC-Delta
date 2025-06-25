@@ -1,5 +1,6 @@
 {
   "name": "chmr-report-dispos",
+  "type": "module",
   "version": "1.0.0",
   "description": "Service to handle promotable reports disposition",
   "main": "index.js",
