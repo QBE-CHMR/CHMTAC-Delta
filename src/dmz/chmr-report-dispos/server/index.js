@@ -13,9 +13,6 @@ async function fetchPromotableReports() {
       params: { status: STATUS_ENUM.PROMOTABLE }
     });
     
-    // Debug the actual response structure
-    console.log('API Response:', JSON.stringify(response.data, null, 2));
-    
     // Check if response.data is already an array
     if (Array.isArray(response.data)) {
       return response.data;
@@ -24,18 +21,6 @@ async function fetchPromotableReports() {
     // If response.data has a reports property that's an array
     if (response.data && Array.isArray(response.data.reports)) {
       return response.data.reports;
-    }
-    
-    // If response.data is an object with report items
-    if (response.data && typeof response.data === 'object') {
-      // Try to extract reports if they're in an object format
-      const possibleReports = Object.values(response.data).filter(item => 
-        item && typeof item === 'object' && item.id
-      );
-      
-      if (possibleReports.length > 0) {
-        return possibleReports;
-      }
     }
     
     // Default to empty array if we couldn't identify the structure
