@@ -62,6 +62,7 @@ services:
       - ./.env
     networks:
       - chmrdmznet
+      - chmrdmpnet
     depends_on:
       - chmr-dmz-dal # Ensure DAL starts before Dispos
     volumes:
