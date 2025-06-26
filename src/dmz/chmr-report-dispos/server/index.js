@@ -2,17 +2,45 @@ import axios from 'axios';
 import { STATUS_ENUM } from '../common/constants/statusEnum.js';
 
 // Configuration values - should be environment variables in production
-const DMZ_DAL_URL = process.env.DMZ_DAL_URL || 'http://chmr-dmz-dal:3000';
-const DMP_INGEST_URL = process.env.DMP_INGEST_URL || 'http://host.docker.internal:4000/api/ingest';
+const DMZ_DAL_URL = `http://chmr-dmz-dal:${process.env.PORT_DMZ_DAL || 5000}`;
+const DMP_INGEST_URL = process.env.DMP_INGEST_URL || `http://chmr-dmp-ingest:${process.env.PORT_DMP_INGEST || 7642}/api/ingest`;
 const POLL_INTERVAL = process.env.POLL_INTERVAL || 6000; // Default is 6 seconds
 
 // Fetches all promotable reports from DMZ DAL
 async function fetchPromotableReports() {
   try {
-    const response = await axios.get(`${DMZ_DAL_URL}/api/reports`, {
+    const response = await axios.get(`${DMZ_DAL_URL}/report/management`, {
       params: { status: STATUS_ENUM.PROMOTABLE }
     });
-    return response.data;
+    
+    // Debug the actual response structure
+    console.log('API Response:', JSON.stringify(response.data, null, 2));
+    
+    // Check if response.data is already an array
+    if (Array.isArray(response.data)) {
+      return response.data;
+    }
+    
+    // If response.data has a reports property that's an array
+    if (response.data && Array.isArray(response.data.reports)) {
+      return response.data.reports;
+    }
+    
+    // If response.data is an object with report items
+    if (response.data && typeof response.data === 'object') {
+      // Try to extract reports if they're in an object format
+      const possibleReports = Object.values(response.data).filter(item => 
+        item && typeof item === 'object' && item.id
+      );
+      
+      if (possibleReports.length > 0) {
+        return possibleReports;
+      }
+    }
+    
+    // Default to empty array if we couldn't identify the structure
+    console.warn('Could not determine report structure in response:', response.data);
+    return [];
   } catch (error) {
     console.error('Error fetching promotable reports:', error.message);
     return [];
@@ -34,7 +62,7 @@ async function sendReportToDMP(report) {
 // Updates report status in DMZ DAL
 async function updateReportStatus(reportId, status) {
   try {
-    await axios.patch(`${DMZ_DAL_URL}/api/reports/${reportId}`, { 
+    await axios.patch(`${DMZ_DAL_URL}/report/management/${reportId}`, { 
       status 
     });
     console.log(`Updated report ${reportId} status to ${status}`);
@@ -45,7 +73,7 @@ async function updateReportStatus(reportId, status) {
   }
 }
 
-// Main process function that runs the disposition workflow
+// Main process function
 async function processPromotableReports() {
   console.log('Checking for promotable reports...');
   
