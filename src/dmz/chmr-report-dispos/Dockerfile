@@ -1,14 +1,17 @@
-# Build Stage
 FROM node:18-alpine
 
+# Set working directory similar to chmr-dmz-dal
 WORKDIR /app
+
+# Copy package files and install dependencies
 COPY ./dmz/chmr-report-dispos/package*.json ./
-RUN npm install && npm cache clean --force
+RUN npm install --production
 
-COPY ./dmz/chmr-report-dispos/. .
-
+# Copy common directory to the same level as server
 COPY ./common/ ./common
 
-EXPOSE 6000
+# Copy the server code to the server directory
+COPY ./dmz/chmr-report-dispos/server/ ./server/
 
-CMD ["npm", "start"]
+# Run the server file in the server directory
+CMD ["node", "server/index.js"]
