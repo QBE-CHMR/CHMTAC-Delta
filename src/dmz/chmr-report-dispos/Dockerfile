@@ -13,7 +13,5 @@ COPY ./common/ ./common
 # Copy the server code to the server directory
 COPY ./dmz/chmr-report-dispos/server/ ./server/
 
-EXPOSE 6000
-
 # Run the server file in the server directory
 CMD ["node", "server/index.js"]

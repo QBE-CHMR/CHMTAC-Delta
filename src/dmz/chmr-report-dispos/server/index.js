@@ -20,7 +20,6 @@ async function fetchPromotableReports() {
 }
 
 // Sends a report to DMP ingest service
-
 async function sendReportToDMP(report) {
   try {
     await axios.post(DMP_INGEST_URL, report);
