@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
+import { useMessage } from '../components/MessageContext.js'
 import {
   Box,
   Button,
@@ -36,17 +37,15 @@ export default function ReportManagementPage() {
 
   const [reports,    setReports]    = useState([]);
   const [totalCount, setTotalCount] = useState(0);
+  const { push } = useMessage();
 
-  const [error, setError] = useState("");
-  const [info,  setInfo]  = useState("");
+
 
   const [selectedReport, setSelectedReport] = useState(null); 
   const [editReport,     setEditReport]     = useState(null); 
   const [newStatus,      setNewStatus]      = useState("");
 
   const loadReports = useCallback(async () => {
-    setError("");
-    setInfo("");
     setSelectedReport(null);
     setEditReport(null);
 
@@ -64,13 +63,14 @@ export default function ReportManagementPage() {
       if (list.length === 0) {
         setReports([]);
         setTotalCount(0);
+        push({ severity:'info', text:'No reports match your filter.' });
         return;
       }
       setReports(list);
       setTotalCount(data.totalCount ?? list.length);
     } catch (err) {
-      setInfo("No reports found for the selected status.");
-      }
+      push({ severity:'error', text:`Failed to load reports: ${err.message}` });
+    }
     
   }, [startIndex, maxSize, statusFilter, sortField, sortOrder]);
 
@@ -84,13 +84,12 @@ export default function ReportManagementPage() {
   };
 
   const viewReport = async (id) => {
-    setError("");
     try {
       const { data } = await api.get(`/management/${encodeURIComponent(id)}`);
       setSelectedReport(data);
       setEditReport(null);
-    } catch (err) {
-      setError("Failed to fetch report: " + err.message);
+   } catch (err) {
+     push({ severity:'error', text:`Failed to fetch report: ${err.message}` });
     }
   };
 
@@ -110,9 +109,11 @@ export default function ReportManagementPage() {
         prev.map(r => r.id === editReport.id ? { ...r, status: newStatus } : r)
       );
       setEditReport(null);
-    } catch (err) {
-      setError("Failed to update status: " + err.message);
+     } catch (err) {
+      push({ severity:'error', text:`Failed to update status: ${err.message}` });
+      return;
     }
+    push({ severity:'success', text:`Status updated to “${STATUS_MAP[newStatus]}”.` });
   };
 
   return (
@@ -122,8 +123,6 @@ export default function ReportManagementPage() {
       />
 
       <Container maxWidth={false} sx={{ pt:5 }}>
-        {error && <Box sx={{ color:"red",  mb:2 }}>{error}</Box>}
-        {info  && <Box sx={{ color:"gray", mb:2 }}>{info}</Box>}
 
         <Grid container spacing={2} sx={{ mb:3 }} alignItems="center">
           <Grid item xs={12} sm={4} md={3}>
