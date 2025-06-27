@@ -32,16 +32,15 @@ const IntakeFormComponent = ({ onSubmit }) => {
   useEffect(() => {
     // Dynamically add the honeypot field to the form
     if (formRef.current) {
-      const honeypot2Field = document.createElement("input");
-      honeypot2Field.type = "text";
-      honeypot2Field.name = "honeypot2"; // Dynamic honeypot field
-      honeypot2Field.style.position = "absolute"; // Move off-screen
-      honeypot2Field.style.left = "-9999px"; // Position it far to the left
-      honeypot2Field.style.top = "0"; // Keep it aligned vertically
-      honeypot2Field.tabIndex = "-1"; // Exclude from tab navigation
-      honeypot2Field.autocomplete = "off"; // Prevent autofill
-      honeypot2Field.value = ""; // Ensure it's empty
-      formRef.current.appendChild(honeypot2Field); // Append to the form using the ref
+      const severityField = document.createElement("input");
+      severityField.type = "text";
+      severityField.name = "incident_severity";
+      severityField.style.position = "absolute";
+      severityField.style.left = "-9999px";
+      severityField.tabIndex = "-1";
+      severityField.autocomplete = "off";
+      severityField.value = ""; // Ensure it's empty
+      formRef.current.appendChild(severityField); // Append to the form using the ref
     }
   }, []);
 
@@ -237,7 +236,7 @@ const IntakeFormComponent = ({ onSubmit }) => {
             </Grid>
             <input
               type="text"
-              name="honeypot1"
+              name="field_operation_location"
               tabIndex="-1"
               autoComplete="off"
               style={{
