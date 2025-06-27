@@ -30,7 +30,7 @@ const IntakeFormComponent = ({ onSubmit }) => {
   const timeZoneOptions = moment.tz.names(); // Get a list of all time zones
 
   useEffect(() => {
-    // Dynamically add the honeypot field to the form
+    // Dynamically add the field to the form
     if (formRef.current) {
       const severityField = document.createElement("input");
       severityField.type = "text";
