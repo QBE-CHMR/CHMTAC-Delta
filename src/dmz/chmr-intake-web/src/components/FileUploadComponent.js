@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import {Button} from "@mui/material";
 
 const FileUploadComponent = ({ onFilesUploaded }) => {
   const [selectedFiles, setSelectedFiles] = useState([]);
@@ -76,14 +77,21 @@ const FileUploadComponent = ({ onFilesUploaded }) => {
   return (
     <div>
       {/* File Input with ref */}
-      <input
-        ref={fileInputRef}
-        type="file"
-        multiple
-        onChange={handleFileChange}
-        name="document_files" 
-        style={{ marginBottom: "10px" }}
-      />
+      <Button
+        variant="contained"
+        sx={{ mt: 2, backgroundColor: "#7280ce" }}
+        component="label" // Makes the button act as a label for the file input
+      >
+        Choose Files
+        <input
+          ref={fileInputRef}
+          type="file"
+          multiple
+          onChange={handleFileChange}
+          name="document_files"
+          hidden // Hides the default file input
+        />
+      </Button>
 
       {/* Selected Files list remains the same */}
       <ul>
