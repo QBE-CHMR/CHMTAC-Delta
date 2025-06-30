@@ -3,7 +3,6 @@ import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import ReportRouter from './routes/Report.js';
 import managementRouter from './routes/ReportManagement.js';
-import promoteRouter     from './routes/promote.js';
 import './redisClient.js';
 import path from "path";
 
@@ -15,7 +14,6 @@ app.use(cookieParser());
 app.use('/files', express.static(path.resolve('files')));
 app.use('/report', ReportRouter);
 app.use('/report/management', managementRouter);
-app.use('/report/promote',   promoteRouter);
 
 // Handle undefined routes (404)
 app.use((req, res, next) => {
