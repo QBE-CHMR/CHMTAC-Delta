@@ -6,10 +6,9 @@ import { useNavigate } from "react-router-dom";
 import Header from '../components/Header.js';
 import MenuBar from '../components/MenuBar.js';
 import { v4 as uuidv4 } from 'uuid';
-import { useMessage } from "../components/MessageContext.js";
+
 const ReportForm = () => {
   const navigate = useNavigate();
-  const  { push }  = useMessage();
 
   const handleFormSubmit = async (formData) => {
     try {
@@ -34,7 +33,7 @@ const ReportForm = () => {
       navigate("/SubmissionPage", { state: { plain } });
     } catch (error) {
       console.error("Error submitting the report:", error);
-      push({ severity:'error', text:'Submission failed - please retry.' });
+      alert("Error submitting the report. Please try again.");
     }
   };
 
@@ -57,4 +56,4 @@ const ReportForm = () => {
   );
 };
 
-export default ReportForm;
+export default ReportForm

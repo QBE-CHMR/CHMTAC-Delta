@@ -17,9 +17,12 @@ services:
     env_file:
       - ./.env
     networks:
-      - chmrdmznet
+      chmrdmznet:
+        aliases:
+          - chmr-dmz-dal
+      chmrdmpnet: {}
     depends_on:
-      - chmr-dmz-redis # Ensure Redis starts before DAL
+      - chmr-dmz-redis
     volumes:
       - ./common:/common
       - filedata:/usr/server/app/files
@@ -31,11 +34,11 @@ services:
     env_file:
       - ./.env
     ports:
-      - "${PORT_INTAKE}:${PORT_HTTP}" # Expose container's port to the host
+      - "${PORT_INTAKE}:${PORT_HTTP}"
     networks:
       - chmrdmznet
     depends_on:
-      - chmr-dmz-dal # Ensure DAL starts before intake-web
+      - chmr-dmz-dal
     volumes:
       - ./common:/common      
 
@@ -46,11 +49,11 @@ services:
     env_file:
       - ./.env
     ports:
-      - "${PORT_DMZ_MAINT}:${PORT_HTTP}" # Expose maint to the host
+      - "${PORT_DMZ_MAINT}:${PORT_HTTP}"
     networks:
       - chmrdmznet
     depends_on:
-      - chmr-dmz-dal # Ensure DAL starts before maint
+      - chmr-dmz-dal
     volumes:
       - ./common:/common      
 
@@ -62,8 +65,9 @@ services:
       - ./.env
     networks:
       - chmrdmznet
+      - chmrdmpnet
     depends_on:
-      - chmr-dmz-dal # Ensure DAL starts before Dispos
+      - chmr-dmz-dal
     volumes:
       - ./common:/common
 
@@ -100,7 +104,7 @@ services:
     networks:
       - chmrdmpnet
     ports:
-      - ${PORT_DMP_INGEST}:${PORT_DMP_INGEST}
+      - "${PORT_DMP_INGEST}:${PORT_DMP_INGEST}"
     depends_on:
       - chmr-dmp-dal
     volumes:
@@ -115,7 +119,7 @@ services:
     networks:
       - chmrdmpnet
     ports:
-      - ${PORT_DMP_API}:${PORT_DMP_API}
+      - "${PORT_DMP_API}:${PORT_DMP_API}"
     depends_on:
       - chmr-dmp-dal
     volumes:
