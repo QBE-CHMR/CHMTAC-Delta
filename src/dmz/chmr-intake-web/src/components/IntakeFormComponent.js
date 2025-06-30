@@ -19,7 +19,7 @@ import FileUploadComponent from "./FileUploadComponent.js";
 import moment from "moment-timezone";
 
 // Choose between DOD or CIVILIAN form
-const REACT_APP_CONTACT_TYPE = process.env.REACT_APP_CONTACT_TYPE || "DOD"; // Default to "CIVILIAN"
+const REACT_APP_CONTACT_TYPE = process.env.REACT_APP_CONTACT_TYPE;
 
 const IntakeFormComponent = ({ onSubmit }) => {
   const formRef = useRef(null); // Create a ref for the form element
