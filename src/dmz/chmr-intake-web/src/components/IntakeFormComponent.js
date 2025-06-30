@@ -17,16 +17,14 @@ import DodContactInfoCard from "./DodContactInfoCard.js";
 import CivilianContactInfoCard from "./CivilianContactInfoCard.js";
 import FileUploadComponent from "./FileUploadComponent.js";
 import moment from "moment-timezone";
-import { useMessage } from "./MessageContext.js";
 
 // Choose between DOD or CIVILIAN form
-const REACT_APP_CONTACT_TYPE = process.env.REACT_APP_CONTACT_TYPE || "DOD"; // Default to "DOD"
+const REACT_APP_CONTACT_TYPE = process.env.REACT_APP_CONTACT_TYPE || "DOD"; // Default to "CIVILIAN"
 
 const IntakeFormComponent = ({ onSubmit }) => {
   const formRef = useRef(null); // Create a ref for the form element
   const [captchaVerified, setCaptchaVerified] = useState(true); // Set to true for testing
-  const { push } = useMessage();
-  const [error, setError] = useState([]);
+  const [error, setError] = useState("");
   const [location, setLocation] = useState('');
   const [showPOC2, setShowPOC2] = useState(false); 
 
@@ -79,7 +77,7 @@ const IntakeFormComponent = ({ onSubmit }) => {
     // Validate start date (required field)
     const startDate = new Date(startDateValue);
     if (startDate > now) {
-      setError(["Start date cannot be in the future."]);
+      setError("Start date cannot be in the future.");
       return;
     }
 
@@ -88,18 +86,18 @@ const IntakeFormComponent = ({ onSubmit }) => {
       const endDate = new Date(endDateValue);
 
       if (endDate > now) {
-        setError(["End date cannot be in the future."]);
+        setError("End date cannot be in the future.");
         return;
       }
 
       if (endDate <= startDate) {
-        setError(["Incident end time must be later than start time."]);
+        setError("Incident end time must be later than start time.");
         return;
       }
     }
 
     if (!captchaVerified) {
-      setError(["Please complete the CAPTCHA before submitting."]);
+      setError("Please complete the CAPTCHA before submitting.");
       return;
     }
 
@@ -108,8 +106,7 @@ const IntakeFormComponent = ({ onSubmit }) => {
       await onSubmit(formData);
     } catch (err) {
       console.error("Error submitting the form:", err);
-     push({ severity:'error',
-             text:'Server error - please try again later.' });
+      setError("An error occurred while submitting the form. Please try again.");
     }
   };
 
@@ -261,9 +258,7 @@ const IntakeFormComponent = ({ onSubmit }) => {
         </CardContent>
       </Card>
 
-      {error.map((msg,i)=>(
-        <Alert key={i} severity="error" sx={{ mb:1 }}>{msg}</Alert>
-      ))}
+      {error && <Alert severity="error">{error}</Alert>}
 
       {/* Submit and reset buttons stacked */}
       <Box sx={{ mt: 3 }}>
